@@ -3,7 +3,8 @@ import { comparePassword, generateToken, hashPassword } from "../services/auth.s
 
 export const postRegister = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, confirmPassword } = req.body;
+    console.log("req.body", name, email, password)
     const existingUser = await Users.findOne({ email });
     if (existingUser) {
       return res.status(400).json({

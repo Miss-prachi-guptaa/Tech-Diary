@@ -5,6 +5,8 @@ import { Register } from './components/Pages/Register'
 import { Login } from './components/Pages/Login'
 import { HomePage } from './components/Pages/HomePage'
 import { Layout } from './components/Pages/Layout'
+import { MyBlogs } from './components/Pages/MyBlog'
+import CreateBlog from './components/Pages/CreateBlog'
 
 function App() {
 
@@ -14,9 +16,17 @@ function App() {
       element: <Layout />,
       children: [
         {
-          path: "/HomePage",
-          element: <HomePage />,
+          path: "/",
+          element: <HomePage />
         },
+        {
+          path: "/my-blogs",
+          element: <MyBlogs />
+        },
+        {
+          path: "/create-blog",
+          element: <CreateBlog />
+        }
       ]
     },
     {

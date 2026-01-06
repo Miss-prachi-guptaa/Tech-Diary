@@ -1,13 +1,13 @@
-import { useNavigate, NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { motion } from "framer-motion";
-import { registerSchema } from "../../schema/validationSchema";
+import { loginSchema } from "../../schema/validationSchema"; // Yup schema for login
 
-export const Register = () => {
+export const Login = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-300 via-purple-300 to-indigo-400 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-300 via-pink-300 to-indigo-400 p-4">
       <motion.div
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
@@ -18,27 +18,38 @@ export const Register = () => {
                    shadow-2xl"
       >
         <h1 className="text-4xl font-bold text-center text-white mb-8">
-          Create Account
+          Welcome Back
         </h1>
 
         <Formik
-          initialValues={{ name: "", email: "", password: "" }}
-          validationSchema={registerSchema}
-          onSubmit={async (values, { setSubmitting, setStatus, resetForm }) => {
+          initialValues={{ email: "", password: "" }}
+          validationSchema={loginSchema}
+          onSubmit={async (values, { setSubmitting, setStatus }) => {
             try {
-              const res = await fetch("http://localhost:5000/users", {
+              // 👇 ADD THIS LINE HERE
+              console.log("Login values:", values);
+
+              setStatus(null);
+              const res = await fetch("http://localhost:5000/api/auth/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(values),
+                body: JSON.stringify(values)
               });
               const data = await res.json();
-              setStatus({ success: "Registration successful 🎉" });
-              resetForm();
-              console.log("Mock API Response:", data);
+
+              if (!res.ok) {
+                setStatus({ error: data.message || "Login failed ❌" });
+                return;
+              }
+              // ✅ Save token
+              localStorage.setItem("token", data.token);
+
+              setStatus({ success: "Login successful 🎉" });
 
               setTimeout(() => navigate("/"), 1000);
-            } catch (error) {
-              setStatus({ error: "Something went wrong ❌" });
+
+            } catch (err) {
+              setStatus({ error: "Server error ❌" });
             } finally {
               setSubmitting(false);
             }
@@ -46,36 +57,11 @@ export const Register = () => {
         >
           {({ isSubmitting, status }) => (
             <Form className="space-y-5">
-              {/* Name */}
-              <motion.div
-                initial={{ x: -50, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ delay: 0.1 }}
-              >
-                <Field
-                  type="text"
-                  name="name"
-                  placeholder="Full Name"
-                  className="w-full px-4 py-3 rounded-xl
-                             bg-white/30 text-white placeholder-white/70
-                             focus:outline-none focus:ring-2 focus:ring-pink-300 transition"
-                />
-                <ErrorMessage
-                  name="name"
-                  component="div"
-                  className="mt-1 text-sm
-             bg-red-500/20 backdrop-blur-sm
-             border-l-4 border-red-700
-             text-red-900 px-3 py-2
-             rounded-md shadow-sm"
-                />
-              </motion.div>
-
               {/* Email */}
               <motion.div
                 initial={{ x: -50, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
-                transition={{ delay: 0.2 }}
+                transition={{ delay: 0.1 }}
               >
                 <Field
                   type="email"
@@ -88,11 +74,7 @@ export const Register = () => {
                 <ErrorMessage
                   name="email"
                   component="div"
-                  className="mt-1 text-sm
-             bg-red-500/20 backdrop-blur-sm
-             border-l-4 border-red-700
-             text-red-900 px-3 py-2
-             rounded-md shadow-sm"
+                  className="mt-1 text-sm bg-red-500/20 backdrop-blur-sm border-l-4 border-red-700 text-red-900 px-3 py-2 rounded-md shadow-sm"
                 />
               </motion.div>
 
@@ -100,7 +82,7 @@ export const Register = () => {
               <motion.div
                 initial={{ x: -50, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
-                transition={{ delay: 0.3 }}
+                transition={{ delay: 0.2 }}
               >
                 <Field
                   type="password"
@@ -108,30 +90,26 @@ export const Register = () => {
                   placeholder="Password"
                   className="w-full px-4 py-3 rounded-xl
                              bg-white/30 text-white placeholder-white/70
-                             focus:outline-none focus:ring-2 focus:ring-indigo-300 transition"
+                             focus:outline-none focus:ring-2 focus:ring-pink-300 transition"
                 />
                 <ErrorMessage
                   name="password"
                   component="div"
-                  className="mt-1 text-sm
-             bg-red-500/20 backdrop-blur-sm
-             border-l-4 border-red-700
-             text-red-900 px-3 py-2
-             rounded-md shadow-sm"
+                  className="mt-1 text-sm bg-red-500/20 backdrop-blur-sm border-l-4 border-red-700 text-red-900 px-3 py-2 rounded-md shadow-sm"
                 />
               </motion.div>
 
-              {/* Submit */}
+              {/* Submit Button */}
               <motion.button
                 type="submit"
                 disabled={isSubmitting}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="w-full py-3 rounded-xl
-                           bg-gradient-to-r from-pink-500 to-purple-500
+                           bg-gradient-to-r from-purple-500 to-pink-500
                            text-white font-semibold hover:opacity-90 transition"
               >
-                {isSubmitting ? "Registering..." : "Register"}
+                {isSubmitting ? "Logging in..." : "Login"}
               </motion.button>
 
               {/* Status messages */}
@@ -146,12 +124,12 @@ export const Register = () => {
         </Formik>
 
         <p className="text-center text-white/80 mt-6">
-          Already have an account?{" "}
-          <NavLink to="/" className="underline text-yellow-300 hover:text-white">
-            Login here
+          Don’t have an account?{" "}
+          <NavLink to="/register" className="underline text-yellow-300 hover:text-white">
+            Register here
           </NavLink>
         </p>
       </motion.div>
-    </div>
+    </div >
   );
 };

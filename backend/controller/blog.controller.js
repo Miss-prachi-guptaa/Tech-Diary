@@ -112,3 +112,15 @@ export const getMyBlogs = async (req, res) => {
     });
   }
 }
+
+export const getAllBlogs = async (req, res) => {
+  try {
+    const blogs = await Blogs.find({ status: "PUBLISHED", isDeleted: false }).sort({ createdAt: -1 });
+    return res.status(200).json({ blogs })
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Server error"
+    });
+  }
+}
