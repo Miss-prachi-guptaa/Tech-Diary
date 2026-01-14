@@ -1,6 +1,6 @@
 import { FaEdit, FaTrash } from "react-icons/fa";
 
-const MyBlogCard = ({ blog, onDelete, onPublish, onEdit }) => {
+const MyBlogCard = ({ blog, onDelete, onPublish }) => {
   const isPublished = blog.status === "PUBLISHED";
 
   return (

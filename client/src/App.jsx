@@ -1,34 +1,57 @@
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import "./App.css";
 
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import './App.css'
-import { Register } from './components/Pages/Register'
-import { Login } from './components/Pages/Login'
-import { HomePage } from './components/Pages/HomePage'
-import { Layout } from './components/Pages/Layout'
-import { MyBlogs } from './components/Pages/MyBlog'
-import CreateBlog from './components/Pages/CreateBlog'
+import { Register } from "./components/Pages/Register";
+import { Login } from "./components/Pages/Login";
+import { HomePage } from "./components/Pages/HomePage";
+import { MyBlogs } from "./components/Pages/MyBlog";
+import CreateBlog from "./components/Pages/CreateBlog";
+import Profile from "./components/Pages/Profile";
+
+import { Layout } from "./layout/main.layout";
+import { ProfileLayout } from "./layout/Profile.layout";
+
 
 function App() {
-
   const router = createBrowserRouter([
+    // 🔹 MAIN APP LAYOUT (Navbar + App Sidebar)
     {
       path: "/",
       element: <Layout />,
       children: [
         {
           path: "/",
-          element: <HomePage />
+          element: <HomePage />,
         },
         {
           path: "/my-blogs",
-          element: <MyBlogs />
+          element: <MyBlogs />,
         },
         {
           path: "/create-blog",
-          element: <CreateBlog />
-        }
-      ]
+          element: <CreateBlog />,
+        },
+      ],
     },
+
+    // 🔹 PROFILE LAYOUT (Navbar only)
+    {
+      path: "/",
+      element: <ProfileLayout />,
+      children: [
+        {
+          path: "/profile",
+          element: <Profile />,
+        },
+        // later you can add:
+        // {
+        //   path: "/users/:id",
+        //   element: <Profile />,
+        // }
+      ],
+    },
+
+    // 🔹 AUTH PAGES (no layout)
     {
       path: "/register",
       element: <Register />,
@@ -37,9 +60,9 @@ function App() {
       path: "/login",
       element: <Login />,
     },
+  ]);
 
-  ])
-  return <RouterProvider router={router} />
+  return <RouterProvider router={router} />;
 }
 
-export default App
+export default App;

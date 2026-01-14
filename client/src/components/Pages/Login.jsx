@@ -33,6 +33,7 @@ export const Login = () => {
               const res = await fetch("http://localhost:5000/api/auth/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
+                credentials: "include",// Include cookies
                 body: JSON.stringify(values)
               });
               const data = await res.json();
@@ -42,7 +43,8 @@ export const Login = () => {
                 return;
               }
               // ✅ Save token
-              localStorage.setItem("token", data.token);
+              console.log("fron", data)
+              localStorage.setItem("accessToken", data.accessToken);
 
               setStatus({ success: "Login successful 🎉" });
 

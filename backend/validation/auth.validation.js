@@ -20,7 +20,7 @@ export const registerSchema = Joi.object({
   email: Joi.string()
     .trim()
     .lowercase()
-    .email({ tlds: { allow: false } })
+    .email({ tlds: { allow: ['com', 'in'] } })
     .required()
     .messages({
       "string.email": "Please enter a valid email address",

@@ -10,7 +10,17 @@ export const comparePassword = async (hashedPassowrd, plainPassword) => {
   return await argon2.verify(hashedPassowrd, plainPassword);
 }
 
-export const generateToken = (payload) => {
-  return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '30d' });
-}
+
+
+export const generateAccessToken = (payload) => {
+  return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
+    expiresIn: "15m"
+  });
+};
+
+export const generateRefreshToken = (payload) => {
+  return jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, {
+    expiresIn: "7d"
+  });
+};
 

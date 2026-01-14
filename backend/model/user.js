@@ -3,7 +3,7 @@ import { ROLES } from "../constants/roles.js";
 
 const userSchema = new mongoose.Schema({
   name: {
-    type: String,
+    type: String,//html tag not allowed
     required: [true, "Full name is required"],
     trim: true,
     minlength: 3,

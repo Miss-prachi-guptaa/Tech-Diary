@@ -17,7 +17,7 @@ export const verifytoken = (req, res, next) => {
 
   // 2️⃣ Verify token
   try {
-    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+    const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
     // Attach user info to request object
     req.user = decodedToken;
     console.log('req.user', req.user);

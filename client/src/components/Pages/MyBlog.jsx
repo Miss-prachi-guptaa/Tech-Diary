@@ -74,9 +74,9 @@ export const MyBlogs = () => {
         <MyBlogCard
           key={blog._id}
           blog={blog}
-
           onDelete={handleDelete}
-          onTogglePublish={handlePublish} />
+          onPublish={handlePublish}
+        />
       ))}
     </div>
   );
