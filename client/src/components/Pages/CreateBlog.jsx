@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import { createBlog } from "../../api/blog.api";
 
 const CreateBlog = () => {
   const [title, setTitle] = useState("");
@@ -20,16 +21,7 @@ const CreateBlog = () => {
 
       const token = localStorage.getItem("accessToken");
 
-      await axios.post(
-        "http://localhost:5000/api/blogs/create",
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      await createBlog(formData, token);
 
       alert("Blog created successfully");
       setTitle("");

@@ -86,6 +86,16 @@ export const getAllBlogs = () => API.get("/blogs/all");
 // private – my blogs
 export const getMyBlogs = () => API.get("/blogs/my");
 
+// create blog
+export const createBlog = (formData, token) => {
+  return API.post("/blogs/create", formData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "multipart/form-data",
+    },
+  });
+};
+
 // publish blog
 export const publishBlog = (id) =>
   API.put(`/blogs/publish/${id}`);
