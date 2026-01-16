@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:5000/api",
+  baseURL: import.meta.env.VITE_API_URL,
   withCredentials: true // IMPORTANT (cookie ke liye)
 });
 
@@ -67,6 +67,19 @@ API.interceptors.response.use(
    Blog APIs
 ========================= */
 
+
+// login
+export const postLogin = (values) =>
+  API.post("/auth/login", values);
+
+//register
+export const postRegister = (values) =>
+  API.post("/auth/register", values);
+
+// logout
+export const postLogout = () =>
+  API.post("/auth/logout");
+
 // public – all blogs
 export const getAllBlogs = () => API.get("/blogs/all");
 
@@ -80,3 +93,5 @@ export const publishBlog = (id) =>
 // delete blog (soft delete)
 export const deleteBlog = (id) =>
   API.delete(`/blogs/${id}`);
+
+//

@@ -2,6 +2,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { motion } from "framer-motion";
 import { loginSchema } from "../../schema/validationSchema";
+import { postLogin } from "../../api/blog.api";
 
 export const Login = () => {
   const navigate = useNavigate();
@@ -45,30 +46,26 @@ export const Login = () => {
             try {
               setStatus(null);
 
-              const res = await fetch("http://localhost:5000/api/auth/login", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                credentials: "include",
-                body: JSON.stringify(values),
-              });
+              const res = await postLogin(values);
 
-              const data = await res.json();
-              if (!res.ok) {
-                setStatus({ error: data.message || "Login failed" });
-                return;
-              }
+              // accessToken coming from backend
+              localStorage.setItem("accessToken", res.data.accessToken);
 
-              localStorage.setItem("accessToken", data.accessToken);
               setStatus({ success: "Login successful" });
 
               setTimeout(() => navigate("/"), 1000);
-            } catch {
-              setStatus({ error: "Server error" });
+            } catch (error) {
+              setStatus({
+                error:
+                  error.response?.data?.message ||
+                  "Login failed. Please try again.",
+              });
             } finally {
               setSubmitting(false);
             }
           }}
         >
+
           {({ isSubmitting, status }) => (
             <Form className="space-y-4">
               {/* Email */}

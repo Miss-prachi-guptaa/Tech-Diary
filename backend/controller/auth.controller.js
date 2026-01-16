@@ -184,17 +184,42 @@ export const refreshAccessToken = async (req, res) => {
 };
 
 
-export const logout = (req, res) => {
-  res.clearCookie("refreshToken", {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict"
-  });
+export const logout = async (req, res) => {
+  try {
+    const refreshToken = req.cookies.refresh_token;
 
-  return res.status(200).json({
-    success: true,
-    message: "Logged out successfully"
-  });
+    if (refreshToken) {
+      const refreshTokenHash = crypto
+        .createHash("sha256")
+        .update(refreshToken)
+        .digest("hex");
+
+      // revoke token in DB
+      await RefreshToken.updateOne(
+        { tokenHash: refreshTokenHash },
+        { $set: { isRevoked: true } }
+      );
+    }
+
+    // clear cookie (NAME MUST MATCH)
+    res.clearCookie("refresh_token", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax"
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Logged out successfully"
+    });
+
+  } catch (error) {
+    console.error("LOGOUT ERROR:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error"
+    });
+  }
 };
 
 

@@ -1,8 +1,23 @@
 import { FaGlobeAsia, FaSearch, FaUserCircle } from "react-icons/fa";
 import { HiMenu } from "react-icons/hi";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 export const Navbar = ({ onMenuClick }) => {
+  const navigate = useNavigate();
+
+  const isLoggedIn = !!localStorage.getItem("accessToken");
+
+  const handleLogout = async () => {
+    try {
+      await postLogout(); // backend logout
+    } catch (err) {
+      console.error("Logout failed");
+    } finally {
+      localStorage.removeItem("accessToken"); // frontend logout
+      navigate("/login");
+    }
+  };
+
   return (
     <header className="h-16 w-full bg-iron_grey-300 border-b border-iron_grey-400
     flex items-center justify-between px-4 sm:px-6">
@@ -34,11 +49,23 @@ export const Navbar = ({ onMenuClick }) => {
 
       {/* Right */}
       <div className="flex items-center gap-3 sm:gap-4">
-        <button className="hidden sm:block bg-cherry_blossom
-  text-iron_grey-100 px-4 py-2 rounded-lg text-sm">
-          Create
-        </button>
-
+        <div className="flex items-center gap-3 sm:gap-4">
+          {!isLoggedIn ? (
+            <NavLink
+              to="/login"
+              className="hidden sm:block bg-cherry_blossom text-iron_grey-100 px-4 py-2 rounded-lg text-sm"
+            >
+              Login
+            </NavLink>
+          ) : (
+            <button
+              onClick={handleLogout}
+              className="hidden sm:block bg-red-500 text-white px-4 py-2 rounded-lg text-sm"
+            >
+              Logout
+            </button>
+          )}
+        </div>
         {/* Profile link */}
         <NavLink
           to="/profile"

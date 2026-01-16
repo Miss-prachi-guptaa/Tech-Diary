@@ -2,6 +2,7 @@ import { useNavigate, NavLink } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { motion } from "framer-motion";
 import { registerSchema } from "../../schema/validationSchema";
+import { postRegister } from "../../api/blog.api";
 
 export const Register = () => {
   const navigate = useNavigate();
@@ -49,27 +50,27 @@ export const Register = () => {
           onSubmit={async (values, { setSubmitting, setStatus, resetForm }) => {
             try {
               setStatus(null);
-              const res = await fetch("http://localhost:5000/api/auth/register", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(values),
-              });
 
-              const data = await res.json();
-              if (!res.ok) {
-                setStatus({ error: data.message || "Registration failed" });
-                return;
-              }
 
-              setStatus({ success: "Account created successfully" });
+
+              const res = await postRegister(values);
+
+              // axios success → directly res.data
+              setStatus({ success: res.data.message || "Account created successfully" });
+
               resetForm();
               setTimeout(() => navigate("/login"), 1000);
-            } catch {
-              setStatus({ error: "Something went wrong" });
+            } catch (error) {
+              const message =
+                error.response?.data?.message ||
+                "Registration failed";
+
+              setStatus({ error: message });
             } finally {
               setSubmitting(false);
             }
           }}
+
         >
           {({ isSubmitting, status }) => (
             <Form className="space-y-4">
