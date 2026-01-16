@@ -1,6 +1,6 @@
 import { useState } from "react";
-import ProfileSidebar from "../Profile/ProfileSidebar";
-import ProfileDashboard from "../Profile/ProfileDashboard";
+import ProfileSidebar from "../profile/ProfileSidebar";
+import ProfileDashboard from "../profile/ProfileDashboard";
 
 const Profile = () => {
   const [showSidebar, setShowSidebar] = useState(true);
