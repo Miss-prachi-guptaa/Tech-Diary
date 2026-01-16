@@ -18,7 +18,7 @@ const CreateBlog = () => {
     try {
       setLoading(true);
 
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem("accessToken");
 
       await axios.post(
         "http://localhost:5000/api/blogs/create",

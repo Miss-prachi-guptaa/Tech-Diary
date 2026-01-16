@@ -7,176 +7,187 @@ export const Register = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-300 via-purple-300 to-indigo-400 p-4">
+    <div
+      className="min-h-dvh flex items-start lg:items-center justify-center
+      bg-gradient-to-br from-[#02140d] via-[#041f16] to-black
+      px-4 sm:px-6 lg:px-8
+      overflow-y-auto relative"
+    >
+      {/* Green glow */}
+      <div className="absolute -top-40 -left-40 w-96 h-96 bg-emerald-500/20 rounded-full blur-3xl" />
+      <div className="absolute bottom-0 right-0 w-96 h-96 bg-green-400/10 rounded-full blur-3xl" />
+
       <motion.div
-        initial={{ opacity: 0, y: -50 }}
+        initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        className="w-full max-w-md p-10 rounded-3xl
-                   bg-white/20 backdrop-blur-xl
-                   border border-white/30
-                   shadow-2xl"
+        transition={{ duration: 0.6 }}
+        className="
+          relative w-full max-w-sm sm:max-w-md
+          mt-10 lg:mt-0
+          p-6 sm:p-8 rounded-2xl
+          bg-white/10 backdrop-blur-2xl
+          border border-white/20
+          shadow-[0_0_60px_rgba(16,185,129,0.35)]
+        "
       >
-        <h1 className="text-4xl font-bold text-center text-white mb-8">
+        {/* Title */}
+        <h1 className="text-2xl sm:text-3xl font-semibold text-center text-white">
           Create Account
         </h1>
+        <p className="text-center text-white/60 text-xs sm:text-sm mt-1 mb-6">
+          Join Blogify & start writing
+        </p>
 
         <Formik
-          initialValues={{ name: "", email: "", password: "", confirmPassword: "" }}
+          initialValues={{
+            name: "",
+            email: "",
+            password: "",
+            confirmPassword: "",
+          }}
           validationSchema={registerSchema}
           onSubmit={async (values, { setSubmitting, setStatus, resetForm }) => {
             try {
+              setStatus(null);
               const res = await fetch("http://localhost:5000/api/auth/register", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(values),
               });
+
               const data = await res.json();
               if (!res.ok) {
-                setStatus({ error: data.message || "Registration failed ❌" });
+                setStatus({ error: data.message || "Registration failed" });
                 return;
               }
-              setStatus({ success: "Registration successful 🎉" });
-              resetForm();
-              console.log("Mock API Response:", data);
 
+              setStatus({ success: "Account created successfully" });
+              resetForm();
               setTimeout(() => navigate("/login"), 1000);
-            } catch (error) {
-              setStatus({ error: "Something went wrong ❌" });
+            } catch {
+              setStatus({ error: "Something went wrong" });
             } finally {
               setSubmitting(false);
             }
           }}
         >
           {({ isSubmitting, status }) => (
-            <Form className="space-y-5">
+            <Form className="space-y-4">
               {/* Name */}
-              <motion.div
-                initial={{ x: -50, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ delay: 0.1 }}
-              >
+              <div>
                 <Field
                   type="text"
                   name="name"
                   placeholder="Full Name"
-                  className="w-full px-4 py-3 rounded-xl
-                             bg-white/30 text-white placeholder-white/70
-                             focus:outline-none focus:ring-2 focus:ring-pink-300 transition"
+                  className="
+                    w-full px-4 py-3 rounded-xl
+                    bg-white/10 text-white placeholder-white/50
+                    border border-white/20
+                    focus:outline-none focus:ring-2 focus:ring-emerald-400
+                  "
                 />
                 <ErrorMessage
                   name="name"
                   component="div"
-                  className="mt-1 text-sm
-             bg-red-500/20 backdrop-blur-sm
-             border-l-4 border-red-700
-             text-red-900 px-3 py-2
-             rounded-md shadow-sm"
+                  className="text-xs text-red-400 mt-1"
                 />
-              </motion.div>
+              </div>
 
               {/* Email */}
-              <motion.div
-                initial={{ x: -50, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ delay: 0.2 }}
-              >
+              <div>
                 <Field
                   type="email"
                   name="email"
                   placeholder="Email Address"
-                  className="w-full px-4 py-3 rounded-xl
-                             bg-white/30 text-white placeholder-white/70
-                             focus:outline-none focus:ring-2 focus:ring-purple-300 transition"
+                  className="
+                    w-full px-4 py-3 rounded-xl
+                    bg-white/10 text-white placeholder-white/50
+                    border border-white/20
+                    focus:outline-none focus:ring-2 focus:ring-emerald-400
+                  "
                 />
                 <ErrorMessage
                   name="email"
                   component="div"
-                  className="mt-1 text-sm
-             bg-red-500/20 backdrop-blur-sm
-             border-l-4 border-red-700
-             text-red-900 px-3 py-2
-             rounded-md shadow-sm"
+                  className="text-xs text-red-400 mt-1"
                 />
-              </motion.div>
+              </div>
 
               {/* Password */}
-              <motion.div
-                initial={{ x: -50, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ delay: 0.3 }}
-              >
+              <div>
                 <Field
                   type="password"
                   name="password"
                   placeholder="Password"
-                  className="w-full px-4 py-3 rounded-xl
-                             bg-white/30 text-white placeholder-white/70
-                             focus:outline-none focus:ring-2 focus:ring-indigo-300 transition"
+                  className="
+                    w-full px-4 py-3 rounded-xl
+                    bg-white/10 text-white placeholder-white/50
+                    border border-white/20
+                    focus:outline-none focus:ring-2 focus:ring-emerald-400
+                  "
                 />
                 <ErrorMessage
                   name="password"
                   component="div"
-                  className="mt-1 text-sm
-             bg-red-500/20 backdrop-blur-sm
-             border-l-4 border-red-700
-             text-red-900 px-3 py-2
-             rounded-md shadow-sm"
+                  className="text-xs text-red-400 mt-1"
                 />
-              </motion.div>
+              </div>
 
               {/* Confirm Password */}
-              <motion.div
-                initial={{ x: -50, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ delay: 0.35 }}
-              >
+              <div>
                 <Field
                   type="password"
                   name="confirmPassword"
                   placeholder="Confirm Password"
-                  className="w-full px-4 py-3 rounded-xl
-               bg-white/30 text-white placeholder-white/70
-               focus:outline-none focus:ring-2 focus:ring-indigo-300 transition"
+                  className="
+                    w-full px-4 py-3 rounded-xl
+                    bg-white/10 text-white placeholder-white/50
+                    border border-white/20
+                    focus:outline-none focus:ring-2 focus:ring-emerald-400
+                  "
                 />
                 <ErrorMessage
                   name="confirmPassword"
                   component="div"
-                  className="mt-1 text-sm
-      bg-red-500/20 backdrop-blur-sm
-      border-l-4 border-red-700
-      text-red-900 px-3 py-2
-      rounded-md shadow-sm"
+                  className="text-xs text-red-400 mt-1"
                 />
-              </motion.div>
+              </div>
 
               {/* Submit */}
               <motion.button
                 type="submit"
                 disabled={isSubmitting}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="w-full py-3 rounded-xl
-                           bg-gradient-to-r from-pink-500 to-purple-500
-                           text-white font-semibold hover:opacity-90 transition"
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.96 }}
+                className="
+                  w-full mt-3 py-3 rounded-xl
+                  bg-gradient-to-r from-emerald-500 to-green-500
+                  text-white font-semibold
+                  shadow-lg shadow-emerald-500/40
+                "
               >
-                {isSubmitting ? "Registering..." : "Register"}
+                {isSubmitting ? "Creating..." : "Create Account"}
               </motion.button>
 
-              {/* Status messages */}
-              {status && status.success && (
-                <p className="text-center text-white mt-4">{status.success}</p>
+              {/* Status */}
+              {status?.error && (
+                <p className="text-center text-red-400 text-sm mt-2">
+                  {status.error}
+                </p>
               )}
-              {status && status.error && (
-                <p className="text-center text-white mt-4">{status.error}</p>
+              {status?.success && (
+                <p className="text-center text-green-400 text-sm mt-2">
+                  {status.success}
+                </p>
               )}
             </Form>
           )}
         </Formik>
 
-        <p className="text-center text-white/80 mt-6">
+        {/* Footer */}
+        <p className="text-center text-white/60 text-xs sm:text-sm mt-6">
           Already have an account?{" "}
-          <NavLink to="/" className="underline text-yellow-300 hover:text-white">
+          <NavLink to="/login" className="text-emerald-400 hover:underline">
             Login here
           </NavLink>
         </p>

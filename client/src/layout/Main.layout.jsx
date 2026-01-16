@@ -1,20 +1,30 @@
 import { Outlet } from "react-router-dom";
+import { useState } from "react";
+import { MobileSidebar } from "../components/blog/MobileSidebar";
+
 import { Navbar } from "../components/Pages/Navbar";
 import { Sidebar } from "../components/Pages/Sidebar";
 
-export const Layout = () => {
-  return (
-    <div className="flex flex-col h-screen bg-gray-900 text-white">
-      {/* Navbar at the top */}
-      <Navbar />
 
-      {/* Body: Sidebar + main content */}
+export const Layout = () => {
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  return (
+    <div className="h-dvh flex flex-col bg-gray-900 text-white">
+      <Navbar onMenuClick={() => setMobileOpen(true)} />
+
       <div className="flex flex-1 overflow-hidden">
-        {/* Sidebar on the left */}
+        {/* Desktop / Tablet Sidebar */}
         <Sidebar />
 
-        {/* Main content */}
-        <main className="flex-1 p-6 overflow-auto bg-gray-900">
+        {/* Mobile Drawer */}
+        <MobileSidebar
+          open={mobileOpen}
+          onClose={() => setMobileOpen(false)}
+        />
+
+        {/* Main */}
+        <main className="flex-1 p-4 sm:p-6 overflow-auto">
           <Outlet />
         </main>
       </div>
