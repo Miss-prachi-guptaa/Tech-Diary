@@ -8,8 +8,9 @@ import { MyBlogs } from "./components/Pages/MyBlog";
 import CreateBlog from "./components/Pages/CreateBlog";
 import Profile from "./components/Pages/Profile";
 
-import { Layout } from "./layout/main.layout";
+
 import { ProfileLayout } from "./layout/Profile.layout";
+import { Layout } from "./layout/MainLayout";
 
 
 function App() {
