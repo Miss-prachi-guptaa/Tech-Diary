@@ -11,56 +11,50 @@ import Profile from "./components/Pages/Profile";
 
 import { ProfileLayout } from "./layout/Profile.layout";
 import { Layout } from "./layout/MainLayout";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 
 function App() {
   const router = createBrowserRouter([
-    // 🔹 MAIN APP LAYOUT (Navbar + App Sidebar)
+
+    // 🔐 PROTECTED AREA
     {
-      path: "/",
-      element: <Layout />,
+      element: <ProtectedRoute />,
       children: [
+
+        // 🔹 MAIN APP LAYOUT
         {
           path: "/",
-          element: <HomePage />,
+          element: <Layout />,
+          children: [
+            { index: true, element: <HomePage /> },
+            { path: "my-blogs", element: <MyBlogs /> },
+            { path: "create-blog", element: <CreateBlog /> },
+          ],
         },
+
+        // 🔹 PROFILE LAYOUT
         {
-          path: "/my-blogs",
-          element: <MyBlogs />,
+          path: "/",
+          element: <ProfileLayout />,
+          children: [
+            { path: "profile", element: <Profile /> },
+          ],
         },
-        {
-          path: "/create-blog",
-          element: <CreateBlog />,
-        },
+
       ],
     },
 
-    // 🔹 PROFILE LAYOUT (Navbar only)
-    {
-      path: "/",
-      element: <ProfileLayout />,
-      children: [
-        {
-          path: "/profile",
-          element: <Profile />,
-        },
-        // later you can add:
-        // {
-        //   path: "/users/:id",
-        //   element: <Profile />,
-        // }
-      ],
-    },
-
-    // 🔹 AUTH PAGES (no layout)
-    {
-      path: "/register",
-      element: <Register />,
-    },
+    // 🔓 PUBLIC AUTH ROUTES
     {
       path: "/login",
       element: <Login />,
     },
+    {
+      path: "/register",
+      element: <Register />,
+    },
+
   ]);
 
   return <RouterProvider router={router} />;
