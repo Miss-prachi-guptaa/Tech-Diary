@@ -1,36 +1,182 @@
-import { useState } from "react";
-import ProfileSidebar from "../profile/ProfileSidebar";
-import ProfileDashboard from "../profile/ProfileDashboard";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
-  const [showSidebar, setShowSidebar] = useState(true);
+  const [profile, setProfile] = useState(null);
+  const [blogs, setBlogs] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem("accessToken");
+
+        const profileRes = await axios.get(
+          "http://localhost:5000/api/blogs/profile",
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+
+        setProfile(profileRes.data.user);
+
+        const blogRes = await axios.get(
+          "http://localhost:5000/api/blogs/my",
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+
+        setBlogs(blogRes.data.blogs);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("accessToken");
+    navigate("/login");
+  };
+
+  if (!profile)
+    return <div className="text-white p-10">Loading...</div>;
+
+  const firstLetter = profile.name.charAt(0).toUpperCase();
 
   return (
-    <div className="h-full flex flex-col lg:flex-row bg-gray-900 text-white">
+    <div className=" bg-[#0f172a] text-white px-4 sm:px-8 md:px-12 py-10">
 
-      {/* Sidebar */}
-      <aside
-        className={`
-          w-full lg:w-80
-          border-b lg:border-b-0 lg:border-r border-gray-800
-          ${showSidebar ? "block" : "hidden"} lg:block
-        `}
-      >
-        <ProfileSidebar onClose={() => setShowSidebar(false)} />
-      </aside>
+      {/* ========================= */}
+      {/* TOP SECTION (Responsive)  */}
+      {/* ========================= */}
 
-      {/* Main */}
-      <section className="flex-1 p-4 sm:p-6 overflow-auto">
-        {/* Mobile toggle */}
-        <button
-          onClick={() => setShowSidebar(!showSidebar)}
-          className="lg:hidden mb-4 text-sm px-3 py-2 rounded bg-gray-800 hover:bg-gray-700"
-        >
-          {showSidebar ? "Hide Profile" : "Show Profile"}
-        </button>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
 
-        <ProfileDashboard />
-      </section>
+        {/* LEFT SIDE */}
+        <div className="bg-[#1e293b] p-6 sm:p-8 rounded-xl shadow-md">
+
+          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 mb-6">
+
+            {/* Avatar */}
+            <div className="w-20 h-20 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center text-3xl font-bold">
+              {firstLetter}
+            </div>
+
+            <div className="text-center sm:text-left">
+              <h2 className="text-xl sm:text-2xl font-semibold">
+                {profile.name}
+              </h2>
+              <p className="text-gray-400 text-sm sm:text-base">
+                {profile.email}
+              </p>
+              <p className="text-gray-400 text-xs sm:text-sm mt-2">
+                Member Since:{" "}
+                {new Date(profile.createdAt).toDateString()}
+              </p>
+            </div>
+          </div>
+
+          {/* Buttons */}
+          <div className="flex flex-wrap gap-3 justify-center sm:justify-start">
+            <button
+              onClick={() => navigate("/edit-profile")}
+              className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-sm"
+            >
+              Edit Profile
+            </button>
+
+            <button
+              onClick={() => navigate("/change-password")}
+              className="bg-yellow-600 hover:bg-yellow-700 px-4 py-2 rounded-lg text-sm"
+            >
+              Change Password
+            </button>
+
+            <button
+              onClick={handleLogout}
+              className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg text-sm"
+            >
+              Logout
+            </button>
+          </div>
+        </div>
+
+        {/* RIGHT SIDE - STATS */}
+        <div className="bg-[#1e293b] p-6 sm:p-8 rounded-xl shadow-md">
+
+          <h3 className="text-lg sm:text-xl font-semibold mb-6 text-center lg:text-left">
+            Your Activity
+          </h3>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+
+            <div className="bg-[#0f172a] p-5 rounded-lg text-center">
+              <p className="text-gray-400 text-sm">Total Blogs</p>
+              <h2 className="text-xl sm:text-2xl font-bold">
+                {profile.totalBlogs}
+              </h2>
+            </div>
+
+            <div className="bg-[#0f172a] p-5 rounded-lg text-center">
+              <p className="text-gray-400 text-sm">Published</p>
+              <h2 className="text-xl sm:text-2xl font-bold text-green-400">
+                {profile.totalPublished}
+              </h2>
+            </div>
+
+            <div className="bg-[#0f172a] p-5 rounded-lg text-center">
+              <p className="text-gray-400 text-sm">Drafts</p>
+              <h2 className="text-xl sm:text-2xl font-bold text-yellow-400">
+                {profile.totalDrafts}
+              </h2>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      {/* ========================= */}
+      {/* BLOG SECTION              */}
+      {/* ========================= */}
+
+      <div className="mt-8">
+        <h2 className="text-xl sm:text-2xl font-semibold mb-6">
+          Your Blogs
+        </h2>
+
+        {blogs.length === 0 ? (
+          <p className="text-gray-400">
+            You haven’t posted any blogs yet.
+          </p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {blogs.map((blog) => (
+              <div
+                key={blog._id}
+                className="bg-[#1e293b] p-5 rounded-xl shadow-md"
+              >
+                <h3 className="text-lg font-semibold mb-2">
+                  {blog.title}
+                </h3>
+
+                <p className="text-gray-400 text-sm mb-3">
+                  {new Date(blog.createdAt).toDateString()}
+                </p>
+
+                <span
+                  className={`text-xs px-3 py-1 rounded-full ${blog.status === "PUBLISHED"
+                    ? "bg-green-600"
+                    : "bg-yellow-600"
+                    }`}
+                >
+                  {blog.status}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
     </div>
   );
 };

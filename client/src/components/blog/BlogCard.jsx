@@ -86,6 +86,7 @@ export const BlogCard = ({ blog }) => {
             <img
               src={blog.image.url}
               alt={blog.title}
+              crossOrigin="anonymous"
               className="
               w-full
               h-40 sm:h-56 md:h-64

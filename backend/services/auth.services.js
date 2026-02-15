@@ -1,5 +1,6 @@
 import argon2 from "argon2";
 import jwt from "jsonwebtoken";
+import { Users } from "../model/user.js";
 
 export const hashPassword = async (password) => {
 
@@ -23,4 +24,8 @@ export const generateRefreshToken = (payload) => {
     expiresIn: "7d"
   });
 };
+
+export const findUserById = async (userId) => {
+  return await Users.findById(userId);
+}
 

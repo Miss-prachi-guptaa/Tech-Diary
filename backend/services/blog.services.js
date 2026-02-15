@@ -6,3 +6,4 @@ export const checkAuthor = (blog, userId) => {
 //   "_id": "695280808b615ec8da2b87c4",      // blog id
 //   "author": "695266a75560eb9d78116594"   // user id (author)
 // }
+
