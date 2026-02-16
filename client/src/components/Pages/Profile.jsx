@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+
 import { useNavigate } from "react-router-dom";
-import { getMyBlogs } from "../../api/blog.api.js";
+import { getMyBlogs, getProfile } from "../../api/blog.api.js";
 
 const Profile = () => {
   const [profile, setProfile] = useState(null);
@@ -21,10 +21,8 @@ const Profile = () => {
         }
 
 
-        const profileRes = await axios.get(
-          "http://localhost:5000/api/blogs/profile",
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
+        const profileRes = await getProfile();
+        console.log("Profile data:", profileRes.data);
 
         setProfile(profileRes.data.user);
 
@@ -33,12 +31,7 @@ const Profile = () => {
         console.log(res.data.blogs)
         setBlogs(res.data.blogs);
 
-        // const blogRes = await axios.get(
-        //   "http://localhost:5000/api/blogs/my",
-        //   { headers: { Authorization: `Bearer ${token}` } }
-        // );
 
-        // setBlogs(blogRes.data.blogs);
       } catch (error) {
         console.error("API ERROR:", error.response?.data || error.message);
         if (error.response?.status === 401) {

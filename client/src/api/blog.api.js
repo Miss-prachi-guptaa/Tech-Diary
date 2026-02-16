@@ -106,3 +106,5 @@ export const deleteBlog = (id) =>
   API.delete(`/blogs/${id}`);
 
 //
+
+export const getProfile = () => API.get("/blogs/profile");
