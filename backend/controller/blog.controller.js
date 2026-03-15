@@ -173,3 +173,86 @@ export const getProfile = async (req, res) => {
     });
   }
 }
+
+export const getEditPage = async (req, res) => {
+  try {
+    const blog = await Blogs.findById(req.params.id);
+    console.log("edit", blog)
+    if (!blog) {
+      return res.status(404).json({
+        success: false,
+        message: "Blog not found"
+      })
+    }
+    return res.status(200).json({
+      success: true,
+      blog
+    })
+  }
+  catch (error) {
+    console.log("❌ Controller error:", error.message);
+    res.status(500).json({
+      success: false,
+      message: "Server error"
+    });
+  }
+}
+
+export const updateBlogPage = async (req, res) => {
+
+
+  try {
+    const { id } = req.params;
+    const { title, content } = req.body;
+
+    const blog = await Blogs.findById(id);
+
+    if (!blog) {
+      return res.status(404).json({
+        success: false,
+        message: "Blog not found"
+      })
+    }
+
+    if (!checkAuthor(blog, req.user.id))
+      return res.status(403).json({ message: "Not allowed" });
+
+    // update text fields
+    blog.title = title || blog.title;
+    blog.content = content || blog.content;
+
+    // update image if new one is uploaded
+    if (req.file) {
+      // delete old image from cloudinary
+      if (blog.image?.public_id) {
+        await cloudinary.uploader.destroy(blog.image.public_id);
+      }
+      // upload new image
+      const result = await cloudinary.uploader.upload(
+        `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`,
+        {
+          folder: "blog_images",
+        },
+      )
+      blog.image = {
+        url: result.secure_url,
+        public_id: result.public_id
+      }
+    }
+
+    await blog.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Blog updated successfully",
+      blog
+    });
+  } catch (error) {
+    console.log("UPDATE BLOG ERROR:", error.message);
+
+    res.status(500).json({
+      success: false,
+      message: "Error updating blog"
+    });
+  }
+}

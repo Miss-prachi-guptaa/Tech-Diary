@@ -66,6 +66,11 @@ export const MyBlogs = () => {
     }
   };
 
+  const handleEdit = (id) => {
+    navigate(`/api/blogs/edit-blog/${id}`);
+    //step 1 - navigate to edit page with blog id in url
+    //step 2 - in edit page, fetch blog details using id and pre-fill form
+  }
 
 
   return (
@@ -76,6 +81,7 @@ export const MyBlogs = () => {
           blog={blog}
           onDelete={handleDelete}
           onPublish={handlePublish}
+          onEdit={handleEdit}
         />
       ))}
     </div>

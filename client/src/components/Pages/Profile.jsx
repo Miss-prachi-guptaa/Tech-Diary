@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { FaUserEdit, FaKey, FaSignOutAlt } from "react-icons/fa";
 
 import { useNavigate } from "react-router-dom";
 import { getMyBlogs, getProfile } from "../../api/blog.api.js";
@@ -22,7 +23,7 @@ const Profile = () => {
 
 
         const profileRes = await getProfile();
-        console.log("Profile data:", profileRes.data);
+
 
         setProfile(profileRes.data.user);
 
@@ -104,29 +105,38 @@ const Profile = () => {
           </div>
 
           {/* Buttons */}
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-4">
+          {/* Buttons */}
+          <div className="flex gap-3 mt-4">
 
+            {/* Edit Profile */}
             <button
               onClick={() => navigate("/edit-profile")}
-              className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-sm"
+              className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 px-3 sm:px-4 py-2 rounded-lg text-sm"
             >
-              Edit Profile
+              <FaUserEdit />
+              <span className="hidden sm:inline">Edit Profile</span>
             </button>
 
+            {/* Change Password */}
             <button
               onClick={() => navigate("/change-password")}
-              className="bg-yellow-600 hover:bg-yellow-700 px-4 py-2 rounded-lg text-sm"
+              className="flex items-center justify-center gap-2 bg-yellow-600 hover:bg-yellow-700 px-3 sm:px-4 py-2 rounded-lg text-sm"
             >
-              Change Password
+              <FaKey />
+              <span className="hidden sm:inline">Change Password</span>
             </button>
 
+            {/* Logout */}
             <button
               onClick={handleLogout}
-              className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg text-sm"
+              className="flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 px-3 sm:px-4 py-2 rounded-lg text-sm"
             >
-              Logout
+              <FaSignOutAlt />
+              <span className="hidden sm:inline">Logout</span>
             </button>
+
           </div>
+
         </div>
 
         {/* RIGHT SIDE - STATS */}

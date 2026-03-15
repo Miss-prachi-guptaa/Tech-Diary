@@ -97,7 +97,7 @@ export const postLogin = async (req, res) => {
 
     });
   } catch (error) {
-    console.log("LOGIN ERROR:", error);
+    console.log("LOGIN ERROR:", error.message);
     return res.status(500).json({ success: false, message: "Server error" });
   }
 }
