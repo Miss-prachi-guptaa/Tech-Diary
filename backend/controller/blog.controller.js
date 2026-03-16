@@ -205,7 +205,7 @@ export const updateBlogPage = async (req, res) => {
     const { id } = req.params;
     const { title, content } = req.body;
 
-    const blog = await Blogs.findById(id);
+    const blog = await Blogs.findByIdAndUpdate(id);
 
     if (!blog) {
       return res.status(404).json({

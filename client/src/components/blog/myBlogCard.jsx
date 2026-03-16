@@ -56,9 +56,8 @@ const MyBlogCard = ({ blog, onDelete, onPublish, onEdit }) => {
               Publish
             </button>
           )}
-
           <button
-            onClick={() => onEdit(blog._id)}
+            onClick={() => onEdit(blog)}
             className="text-ash_grey-300 hover:text-ash_grey-400 transition"
             title="Edit"
           >

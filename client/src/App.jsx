@@ -12,6 +12,7 @@ import Profile from "./components/Pages/Profile";
 import { ProfileLayout } from "./layout/Profile.layout";
 import { Layout } from "./layout/MainLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
+import EditBlog from "./components/Pages/EditBlog";
 
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
           children: [
             { index: true, element: <HomePage /> },
             { path: "my-blogs", element: <MyBlogs /> },
+            { path: "edit-blog/:id", element: <EditBlog /> },
             { path: "create-blog", element: <CreateBlog /> },
           ],
         },

@@ -16,7 +16,7 @@ router.put("/publish/:id", verifytoken, blogController.publishBlog);
 router.get("/my", verifytoken, blogController.getMyBlogs);
 router.get("/all", blogController.getAllBlogs);
 router.get("/edit-blog/:id", verifytoken, blogController.getEditPage);
-router.put("/updateBlog-Page/:id", verifytoken, upload.single("image"), blogController.updateBlogPage);
+router.put("/update-blog/:id", verifytoken, upload.single("image"), blogController.updateBlogPage);
 router.delete("/:id", verifytoken, blogController.deleteblog);
 router.get('/profile', verifytoken, blogController.getProfile);
 

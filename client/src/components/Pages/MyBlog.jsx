@@ -2,12 +2,16 @@ import { useEffect, useState } from "react";
 import { getMyBlogs, publishBlog } from "../../api/blog.api.js";
 import MyBlogCard from "../blog/myBlogCard.jsx";
 import { useNavigate } from "react-router-dom";
+import EditBlogModal from "./EditBlogModal.jsx";
 
 
 export const MyBlogs = () => {
+
   const navigate = useNavigate();
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const [editingBlog, setEditingBlog] = useState(null);
 
   useEffect(() => {
     const fetchMyBlogs = async () => {
@@ -39,11 +43,6 @@ export const MyBlogs = () => {
     );
   }
 
-
-  // const handleEdit = (id) => {
-  //   navigate(`/edit-blog/${id}`);
-  // };
-
   const handleDelete = (id) => {
     // later we’ll add confirmation modal
     console.log("Delete blog:", id);
@@ -66,12 +65,9 @@ export const MyBlogs = () => {
     }
   };
 
-  const handleEdit = (id) => {
-    navigate(`/api/blogs/edit-blog/${id}`);
-    //step 1 - navigate to edit page with blog id in url
-    //step 2 - in edit page, fetch blog details using id and pre-fill form
-  }
-
+  const handleEdit = (blog) => {
+    setEditingBlog(blog);
+  };
 
   return (
     <div className="max-w-3xl mx-auto space-y-4">
@@ -84,7 +80,17 @@ export const MyBlogs = () => {
           onEdit={handleEdit}
         />
       ))}
+
+      {/* Edit Blog Modal */}
+      {editingBlog && (
+        <EditBlogModal
+          blog={editingBlog}
+          onClose={() => setEditingBlog(null)}
+        />
+      )}
     </div>
+
+
   );
 };
 

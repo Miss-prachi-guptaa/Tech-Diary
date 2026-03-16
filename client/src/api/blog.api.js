@@ -105,6 +105,13 @@ export const publishBlog = (id) =>
 export const deleteBlog = (id) =>
   API.delete(`/blogs/${id}`);
 
-//
+//update blog
+export const updateBlog = (id, formData) => {
+  return API.put(`/blogs/update-blog/${id}`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data"
+    }
+  });
+};
 
 export const getProfile = () => API.get("/blogs/profile");
