@@ -2,11 +2,12 @@ import cloudinary from "../config/cloudinary.js";
 import { Blogs } from "../model/blog.model.js";
 import { findUserById } from "../services/auth.services.js";
 import { checkAuthor } from "../services/blog.services.js";
+import { addEmbeddingJob } from "../services/embeddings/embeddingQueue.js";
 
 export const createBlog = async (req, res) => {
   try {
     let imageUrl = null;
-    const { title, content } = req.body;
+    const { title, content, tags, category } = req.body;
 
     if (req.file) {
       const result = await cloudinary.uploader.upload(
@@ -24,10 +25,13 @@ export const createBlog = async (req, res) => {
     const blog = await Blogs.create({
       title,
       content,
+      tags,
+      category,
       image: imageUrl,
       author: req.user.id
     });
 
+    await addEmbeddingJob(blog._id.toString());
     return res.status(201).json({
       success: true,
       message: "Blog created successfully",
