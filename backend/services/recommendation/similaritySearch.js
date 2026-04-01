@@ -51,6 +51,7 @@ export async function findSimilarBlogs(sourceBlog, limit = 10) {
       // (a blog is always most similar to itself — we don't want that)
       $match: {
         _id: { $ne: sourceBlog._id },
+        category: { $exists: true },   // ← only blogs with category
       },
     },
 
@@ -71,7 +72,8 @@ export async function findSimilarBlogs(sourceBlog, limit = 10) {
         author: 1,
         createdAt: 1,
         similarityScore: 1,
-        // simply don't mention embedding here — it won't be included
+        embedding: 1,
+
         // _id is included by default, that's fine
       },
     },
