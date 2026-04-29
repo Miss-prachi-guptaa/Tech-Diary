@@ -50,3 +50,31 @@ export async function generateEmbedding(blog) {
     model: EMBEDDING_MODEL,
   };
 }
+
+
+/**
+ * Generates embedding from a plain text string
+ * Used for search queries — user types text, we convert to vector
+ * 
+ * Different from generateEmbedding() which takes a blog object
+ * This one takes a raw string directly
+ * 
+ * @param {string} text - the search query text from user
+ */
+export async function generateEmbeddingFromText(text) {
+  if (!text || text.trim().length === 0) {
+    throw new Error('Search query cannot be empty');
+  }
+
+  const embed = await getEmbedder();
+
+  const output = await embed(text.trim(), {
+    pooling: 'mean',
+    normalize: true
+  });
+
+  return {
+    vector: Array.from(output.data),
+    model: EMBEDDING_MODEL,
+  };
+}

@@ -6,6 +6,9 @@ import { authrouter } from './routes/auth.route.js';
 import { blogrouter } from './routes/blog.route.js';
 import cookieParser from "cookie-parser";
 import { adminrouter } from './routes/admin.routes.js';
+import { searchrouter } from './routes/search.routes.js';
+
+
 
 
 dotenv.config();
@@ -29,6 +32,7 @@ app.use(cookieParser());
 app.use('/api/auth', authrouter);
 app.use('/api/blogs', blogrouter);
 app.use("/api/admin", adminrouter);
+app.use('/api/search', searchrouter);
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is running on port ${process.env.PORT}`);
