@@ -101,6 +101,7 @@ npm run dev
 
 **Required environment variables:**
 MONGODB_URI=
+
 JWT_SECRET=
 CLOUDINARY_CLOUD_NAME=
 CLOUDINARY_API_KEY=
