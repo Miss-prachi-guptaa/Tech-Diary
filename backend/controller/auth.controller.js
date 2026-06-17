@@ -41,7 +41,11 @@ export const postLogin = async (req, res) => {
     const { email, password } = req.body;
     console.log(email, password);
 
-    const user = await Users.findOne({ email });
+    const user = await Users.findOne({ email }).select("+password");
+
+console.log("USER =", user);
+console.log("PASSWORD =", user?.password);
+
     console.log(user)
     if (!user)
       return res.status(400).json({
@@ -49,10 +53,17 @@ export const postLogin = async (req, res) => {
         message: "Invalid email "
       })
 
+      console.log("Entered password =", password);
+
+
+
+
     const isPasswordValid = await comparePassword(user.password, password);
     if (!isPasswordValid) {
       return res.status(400).json({ success: false, message: "Invalid password" });
     }
+    
+console.log("Password check completed");
     // res.cookie('isLoggedIn', true);
     const accessToken = generateAccessToken({
       id: user._id,

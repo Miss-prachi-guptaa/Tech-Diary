@@ -38,6 +38,7 @@ export const getProfile = async (req, res) => {
     id: user._id,
     name: user.name,
     username: user.username,
+    password: user.password,
     email: user.email,
     bio: user.bio,
     profilePicture: user.profilePicture,
