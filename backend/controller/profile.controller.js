@@ -3,7 +3,7 @@ import { findUserById } from "../services/auth.services.js";
 import { checkAuthor } from "../services/blog.services.js";
 import { addEmbeddingJob } from "../services/embeddings/embeddingQueue.js";
 import { Users } from "../model/user.js";
-import v2 from "../config/cloudinary.js"; 
+import v2 from "../config/cloudinary.js";
 
 
 export const getProfile = async (req, res) => {
@@ -111,10 +111,11 @@ console.log("Existing user with same username:", existingUser);
    if (req.file) {
 
   if (user.profilePicturePublicId) {
-    await cloudinary.uploader.destroy(user.profilePicturePublicId);
+ await v2.uploader.destroy(user.profilePicturePublicId);
+    // await v2.uploader.destroy(user.profilePicturePublicId);
   }
 
-  const result = await cloudinary.uploader.upload(
+  const result = await v2.uploader.upload(
     `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`,
     {
       folder: "profile_pictures",
