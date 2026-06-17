@@ -18,7 +18,7 @@ router.get("/all", blogController.getAllBlogs);
 router.get("/edit-blog/:id", verifytoken, blogController.getEditPage);
 router.put("/update-blog/:id", verifytoken, upload.single("image"), blogController.updateBlogPage);
 router.delete("/:id", verifytoken, blogController.deleteblog);
-router.get('/profile', verifytoken, blogController.getProfile);
+
 
 
 export const blogrouter = router;

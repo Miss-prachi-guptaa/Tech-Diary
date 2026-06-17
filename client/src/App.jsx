@@ -8,21 +8,18 @@ import { MyBlogs } from "./components/Pages/MyBlog";
 import CreateBlog from "./components/Pages/CreateBlog";
 import Profile from "./components/Pages/Profile";
 
-
 import { ProfileLayout } from "./layout/Profile.layout";
 import { Layout } from "./layout/MainLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import EditBlog from "./components/Pages/EditBlog";
-
+import EditProfile from "./components/profile/EditProfile";
 
 function App() {
   const router = createBrowserRouter([
-
     // 🔐 PROTECTED AREA
     {
       element: <ProtectedRoute />,
       children: [
-
         // 🔹 MAIN APP LAYOUT
         {
           path: "/",
@@ -41,9 +38,9 @@ function App() {
           element: <ProfileLayout />,
           children: [
             { path: "profile", element: <Profile /> },
+            { path: "edit-profile", element: <EditProfile /> },
           ],
         },
-
       ],
     },
 
@@ -56,7 +53,6 @@ function App() {
       path: "/register",
       element: <Register />,
     },
-
   ]);
 
   return <RouterProvider router={router} />;

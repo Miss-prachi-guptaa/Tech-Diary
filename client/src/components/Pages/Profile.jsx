@@ -15,24 +15,18 @@ const Profile = () => {
       try {
         const token = localStorage.getItem("accessToken");
 
-
         if (!token) {
           navigate("/login");
           return;
         }
 
-
         const profileRes = await getProfile();
-
 
         setProfile(profileRes.data.user);
 
-
         const res = await getMyBlogs();
-        console.log(res.data.blogs)
+        console.log(res.data.blogs);
         setBlogs(res.data.blogs);
-
-
       } catch (error) {
         console.error("API ERROR:", error.response?.data || error.message);
         if (error.response?.status === 401) {
@@ -50,56 +44,64 @@ const Profile = () => {
     navigate("/login");
   };
 
-  if (!profile)
-    return <div className="text-white p-10">Loading...</div>;
+  if (!profile) return <div className="text-white p-10">Loading...</div>;
 
   const firstLetter = profile.name.charAt(0).toUpperCase();
 
-  const publishedBlogs = blogs.filter(
-    (blog) => blog.status === "PUBLISHED"
-  );
+  const publishedBlogs = blogs.filter((blog) => blog.status === "PUBLISHED");
 
-  const draftBlogs = blogs.filter(
-    (blog) => blog.status === "DRAFT"
-  );
+  const draftBlogs = blogs.filter((blog) => blog.status === "DRAFT");
 
-  const filteredBlogs = blogs.filter(
-    (blog) => blog.status === activeTab
-  );
-
+  const filteredBlogs = blogs.filter((blog) => blog.status === activeTab);
 
   return (
     <div className="bg-[#0f172a] min-h-screen text-white px-4 sm:px-6 md:px-10 lg:px-20 py-6 sm:py-10">
-
-
       {/* ========================= */}
       {/* TOP SECTION (Responsive)  */}
       {/* ========================= */}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-
-
         {/* LEFT SIDE */}
         <div className="bg-[#1e293b] p-6 sm:p-8 rounded-xl shadow-md">
-
           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 mb-6">
-
             {/* Avatar */}
-            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#334155] flex items-center justify-center text-xl sm:text-3xl font-semibold">
-              {firstLetter}
+            <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-gray-600">
+              {profile.profilePicture ? (
+                <img
+                  src={profile.profilePicture}
+                  alt={profile.name}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="w-full h-full bg-[#334155] flex items-center justify-center text-3xl font-semibold">
+                  {firstLetter}
+                </div>
+              )}
             </div>
-
 
             <div className="text-center sm:text-left">
               <h2 className="text-xl sm:text-2xl font-semibold">
                 {profile.name}
               </h2>
-              <p className="text-gray-400 text-sm sm:text-base">
-                {profile.email}
+
+              <p className="text-gray-400">
+                @{profile.username || `user${profile.id.slice(-4)}`}
               </p>
+              {profile.bio && (
+                <p className="text-sm text-gray-300 mt-2">{profile.bio}</p>
+              )}
+
+              <div className="flex gap-5 mt-3 text-sm">
+                <span>
+                  <strong>{profile.followersCount || 0}</strong> Followers
+                </span>
+
+                <span>
+                  <strong>{profile.followingCount || 0}</strong> Following
+                </span>
+              </div>
               <p className="text-gray-400 text-xs sm:text-sm mt-2">
-                Member Since:{" "}
-                {new Date(profile.createdAt).toDateString()}
+                Member Since: {new Date(profile.createdAt).toDateString()}
               </p>
             </div>
           </div>
@@ -107,7 +109,6 @@ const Profile = () => {
           {/* Buttons */}
           {/* Buttons */}
           <div className="flex gap-3 mt-4">
-
             {/* Edit Profile */}
             <button
               onClick={() => navigate("/edit-profile")}
@@ -134,21 +135,16 @@ const Profile = () => {
               <FaSignOutAlt />
               <span className="hidden sm:inline">Logout</span>
             </button>
-
           </div>
-
         </div>
 
         {/* RIGHT SIDE - STATS */}
         <div className="bg-[#1e293b] p-6 sm:p-8 rounded-xl shadow-md">
-
           <h3 className="text-lg sm:text-xl font-semibold mb-6 text-center lg:text-left">
             Your Activity
           </h3>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-
-
             <div className="bg-[#0f172a] p-5 rounded-lg text-center">
               <p className="text-gray-400 text-sm">Total Blogs</p>
               <h2 className="text-xl sm:text-2xl font-bold">
@@ -169,82 +165,36 @@ const Profile = () => {
                 {profile.totalDrafts}
               </h2>
             </div>
-
           </div>
         </div>
       </div>
 
-      {/* ========================= */}
-      {/* BLOG SECTION              */}
-      {/* ========================= */}
-
-      {/* <div className="mt-8">
-        <h2 className="text-xl sm:text-2xl font-semibold mb-6">
-          Your Blogs
-        </h2>
-
-        {blogs.length === 0 ? (
-          <p className="text-gray-400">
-            You haven’t posted any blogs yet.
-          </p>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {blogs.map((blog) => (
-              <div
-                key={blog._id}
-                className="bg-[#1e293b] p-5 rounded-xl shadow-md"
-              >
-                <h3 className="text-lg font-semibold mb-2">
-                  {blog.title}
-                </h3>
-
-                <p className="text-gray-400 text-sm mb-3">
-                  {new Date(blog.createdAt).toDateString()}
-                </p>
-
-                <span
-                  className={`text-xs px-3 py-1 rounded-full ${blog.status === "PUBLISHED"
-                    ? "bg-green-600"
-                    : "bg-yellow-600"
-                    }`}
-                >
-                  {blog.status}
-                </span>
-              </div>
-            ))}
-          </div>
-        )}
-      </div> */}
-
       {/* ================= POSTS SECTION ================= */}
 
       <div className="mt-8 sm:mt-12">
-
-
         {/* Section Title */}
-        <h2 className="text-2xl font-semibold mb-6">
-          Posts
-        </h2>
+        <h2 className="text-2xl font-semibold mb-6">Posts</h2>
 
         {/* Toggle Buttons */}
         <div className="flex gap-6 text-sm sm:text-base mb-6 border-b border-gray-700 pb-2">
-
           <button
             onClick={() => setActiveTab("PUBLISHED")}
-            className={`pb-2 text-sm font-medium ${activeTab === "PUBLISHED"
-              ? "border-b-2 border-gray-300 text-white"
-              : "text-gray-400"
-              }`}
+            className={`pb-2 text-sm font-medium ${
+              activeTab === "PUBLISHED"
+                ? "border-b-2 border-gray-300 text-white"
+                : "text-gray-400"
+            }`}
           >
             Published
           </button>
 
           <button
             onClick={() => setActiveTab("DRAFT")}
-            className={`pb-2 text-sm font-medium ${activeTab === "DRAFT"
-              ? "border-b-2 border-gray-300 text-white"
-              : "text-gray-400"
-              }`}
+            className={`pb-2 text-sm font-medium ${
+              activeTab === "DRAFT"
+                ? "border-b-2 border-gray-300 text-white"
+                : "text-gray-400"
+            }`}
           >
             Draft
           </button>
@@ -261,19 +211,17 @@ const Profile = () => {
               <div
                 key={blog._id}
                 className="bg-[#1e293b] border border-gray-700 rounded-xl p-4 sm:p-6 shadow-md hover:shadow-lg transition"
-
               >
-
                 {/* USER INFO */}
                 <div className="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
-
                   <div className="w-10 h-10 rounded-full bg-gray-600 flex items-center justify-center font-semibold">
                     {profile.name.charAt(0)}
                   </div>
 
                   <div>
                     <p className="font-medium text-sm sm:text-base">
-                      {profile.name}</p>
+                      {profile.name}
+                    </p>
                     <p className="text-xs text-gray-400">
                       {new Date(blog.createdAt).toDateString()}
                     </p>
@@ -281,9 +229,7 @@ const Profile = () => {
                 </div>
 
                 {/* TITLE */}
-                <h3 className="text-lg font-semibold mb-2">
-                  {blog.title}
-                </h3>
+                <h3 className="text-lg font-semibold mb-2">{blog.title}</h3>
 
                 {/* CONTENT */}
                 <p className="text-gray-400 text-sm line-clamp-3 mb-4">
@@ -297,19 +243,14 @@ const Profile = () => {
                       src={blog.image.url}
                       alt={blog.title}
                       className="w-full h-40 sm:h-52 md:h-60 object-cover transition duration-300 hover:scale-105"
-
                     />
                   </div>
                 )}
-
               </div>
             ))}
           </div>
         )}
       </div>
-
-
-
     </div>
   );
 };

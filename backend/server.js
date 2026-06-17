@@ -7,6 +7,7 @@ import { blogrouter } from './routes/blog.route.js';
 import cookieParser from "cookie-parser";
 import { adminrouter } from './routes/admin.routes.js';
 import { searchrouter } from './routes/search.routes.js';
+import { profilerouter } from './routes/profile.routes.js';
 
 
 
@@ -33,6 +34,7 @@ app.use('/api/auth', authrouter);
 app.use('/api/blogs', blogrouter);
 app.use("/api/admin", adminrouter);
 app.use('/api/search', searchrouter);
+app.use('/api/profile', profilerouter);
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is running on port ${process.env.PORT}`);

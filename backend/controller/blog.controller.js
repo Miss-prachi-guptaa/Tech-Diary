@@ -3,6 +3,8 @@ import { Blogs } from "../model/blog.model.js";
 import { findUserById } from "../services/auth.services.js";
 import { checkAuthor } from "../services/blog.services.js";
 import { addEmbeddingJob } from "../services/embeddings/embeddingQueue.js";
+import { Users } from "../model/user.js";
+
 
 export const createBlog = async (req, res) => {
   try {
@@ -130,53 +132,9 @@ export const getAllBlogs = async (req, res) => {
   }
 }
 
-export const getProfile = async (req, res) => {
-  try {
-    const user = await findUserById(req.user.id);
-    if (!user) {
 
-      return res.status(404).json({
-        success: false,
-        message: "User not found"
-      });
-    };
 
-    const totalBlogs = await Blogs.countDocuments({
-      author: req.user.id,
-      status: { $ne: "DELETED" }
-    });
 
-    const totalPublished = await Blogs.countDocuments({
-      author: req.user.id,
-      status: "PUBLISHED"
-    });
-
-    const totalDrafts = await Blogs.countDocuments({
-      author: req.user.id,
-      status: "DRAFT"
-    });
-
-    return res.status(200).json({
-      success: true,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        createdAt: user.createdAt,
-        totalBlogs,
-        totalPublished,
-        totalDrafts
-      }
-    });
-
-  } catch (error) {
-    console.log("❌ Controller error:", error.message);
-    res.status(500).json({
-      success: false,
-      message: "Server error"
-    });
-  }
-}
 
 export const getEditPage = async (req, res) => {
   try {

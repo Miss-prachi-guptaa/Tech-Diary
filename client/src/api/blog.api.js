@@ -114,4 +114,8 @@ export const updateBlog = (id, formData) => {
   });
 };
 
-export const getProfile = () => API.get("/blogs/profile");
+export const getProfile = () => API.get("/profile");
+
+export const updateProfile = (formData) => {
+  return API.patch("/profile", formData);
+};
