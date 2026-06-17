@@ -1,4 +1,4 @@
-# Blogify — AI-Powered Blog Platform
+#Tech-Dairy — AI-Powered Blog Platform
 
 A full-stack blog platform with semantic search and AI recommendations.
 Built with React, Node.js, Express, MongoDB Atlas, and HNSW vector search.
@@ -101,6 +101,7 @@ npm run dev
 
 **Required environment variables:**
 MONGODB_URI=
+
 JWT_SECRET=
 CLOUDINARY_CLOUD_NAME=
 CLOUDINARY_API_KEY=
