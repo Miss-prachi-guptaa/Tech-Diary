@@ -3,7 +3,7 @@ import { findUserById } from "../services/auth.services.js";
 import { checkAuthor } from "../services/blog.services.js";
 import { addEmbeddingJob } from "../services/embeddings/embeddingQueue.js";
 import { Users } from "../model/user.js";
-
+import v2 from "../config/cloudinary.js"; 
 
 
 export const getProfile = async (req, res) => {
