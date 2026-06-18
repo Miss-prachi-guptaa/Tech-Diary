@@ -13,6 +13,7 @@ import { Layout } from "./layout/MainLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import EditBlog from "./components/Pages/EditBlog";
 import EditProfile from "./components/profile/EditProfile";
+import PublicRoute from "./components/PublicRoute";
 
 function App() {
   const router = createBrowserRouter([
@@ -46,12 +47,11 @@ function App() {
 
     // 🔓 PUBLIC AUTH ROUTES
     {
-      path: "/login",
-      element: <Login />,
-    },
-    {
-      path: "/register",
-      element: <Register />,
+      element: <PublicRoute />,
+      children: [
+        { path: "/login", element: <Login /> },
+        { path: "/register", element: <Register /> },
+      ],
     },
   ]);
 
